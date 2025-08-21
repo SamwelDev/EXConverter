@@ -63,7 +63,7 @@ namespace EXConverter.Infrastructure.Infrastructure_Repos
             }
             };
 
-            return _converter.Convert(doc);  // ⬅️ This will fail if libwkhtmltox is missing
+            return _converter.Convert(doc);  
         }
     }
 }
