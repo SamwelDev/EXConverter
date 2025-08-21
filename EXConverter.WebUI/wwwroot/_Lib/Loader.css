@@ -1,0 +1,84 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    background: #ffffff;
+}
+.header-wrapper {
+    text-align: center;
+    padding: 20px 16px 10px 16px;
+}
+.header-logo {
+    width: 120px;
+    margin-bottom: 12px;
+}
+.header-line {
+    width: 550px;
+    border: 2px solid green;
+    margin: 0 auto;
+}
+.mixxer-wrapper {
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+ .spinner {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 24px;
+        position: relative;
+    }
+    .spinner:before, .spinner:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 5px solid transparent;
+        border-top-color: #0ea5e9;
+        animation: spin 1s linear infinite;
+    }
+    .spinner:after {
+        inset: 8px;
+        border-top-color: transparent;
+        border-right-color: #0ea5e9;
+        animation-duration: .8s;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    h1 {
+        font-size: 1.9rem;
+        margin-bottom: 12px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    p {
+        margin-bottom: 12px;
+        line-height: 1.6;
+        color: #64748b;
+    }
+    .highlight {
+        color: #0ea5e9;
+        font-weight: 600;
+    }
+    .footer {
+        margin-top: 20px;
+        font-size: .9rem;
+        color: #64748b;
+    }
+    a {
+        color: #0ea5e9;
+        text-decoration: none;
+    }
+.card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 40px 32px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}

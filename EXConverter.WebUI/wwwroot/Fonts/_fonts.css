@@ -1,0 +1,112 @@
+/*ONLY FONTS INCLUDES FOR A SITE*/
+
+/** POPPINS **/
+@font-face {
+    font-family: "PoppinsThin";
+    src: url(./_fontFiles/Poppins/Poppins-Thin.ttf);
+}
+
+@font-face {
+    font-family: "PoppinsLight";
+    src: url(./_fontFiles/Poppins/Poppins-Light.ttf);
+}
+
+@font-face {
+    font-family: "PoppinsExtraLight";
+    src: url(./_fontFiles/Poppins/Poppins-ExtraLight.ttf);
+}
+
+@font-face {
+    font-family: "PoppinsMedium";
+    src: url(./_fontFiles/Poppins/Poppins-Medium.ttf);
+}
+
+@font-face{
+    font-family: "PoppinsRegular";
+    src: url(./_fontFiles/Poppins/Poppins-Regular.ttf);
+}
+
+
+/** LATO **/    
+@font-face{
+    font-family: "LatoRegular";
+    src: url(./_fontFiles/Lato/Lato-Light.ttf);
+}
+
+
+/** NUNITO **/  
+@font-face{
+    font-family: "NunitoRegular";
+    src: url(./_fontFiles/Nunito/Nunito-VariableFont_wght.ttf);
+}
+
+/** MONTISERRAT **/
+@font-face {
+    font-family: "MontiserratRegular";
+    src: url(./_fontFiles/Montserrat/Montserrat-Regular.ttf);
+}
+
+/** JOST **/
+@font-face {
+    font-family: "JostThin";
+    src: url(./_fontFiles/Jost/Jost-Thin.ttf);
+}
+
+@font-face {
+    font-family: "JostLight";
+    src: url(./_fontFiles/Jost/Jost-Light.ttf);
+}
+
+@font-face {
+    font-family: "JostRegular";
+    src: url(./_fontFiles/Jost/Jost-Regular.ttf);
+}
+
+@font-face {
+    font-family: "JostSemiBold";
+    src: url(./_fontFiles/Jost/Jost-SemiBold.ttf);
+}
+
+/**Helvetica*/
+@font-face {
+    font-family: "HelveticaMedium";
+    src: url(./_fontFiles/Helvetica/HelveticaNeueMedium.otf);
+}
+
+/*San Fransisco*/
+@font-face {
+    font-family: "SfMedium";
+    src: url(./_fontFiles/SanFransisco/SFPRODISPLAYMEDIUM.OTF);
+}
+
+@font-face {
+    font-family: "SfRegular";
+    src: url(./_fontFiles/SanFransisco/SFPRODISPLAYREGULAR.OTF);
+}
+
+/**Roboto*/
+@font-face {
+    font-family: "RobotoThin";
+    src: url(./_fontFiles/Roboto/Roboto-Thin.ttf);
+}
+
+@font-face {
+    font-family: "RobotoLight";
+    src: url(./_fontFiles/Roboto/Roboto-Light.ttf);
+}
+
+@font-face {
+    font-family: "RobotoExtraLight";
+    src: url(./_fontFiles/Roboto/Roboto-ExtraLight.ttf);
+}
+
+@font-face {
+    font-family: "RobotoMedium";
+    src: url(./_fontFiles/Roboto/Roboto-Medium.ttf);
+}
+
+@font-face {
+    font-family: "RobotoRegular";
+    src: url(./_fontFiles/Roboto/Roboto-Regular.ttf);
+}
+

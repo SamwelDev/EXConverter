@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="DinkToPdf" Version="1.0.7" />
+    <PackageReference Include="EPPlus" Version="8.1.0" />
+    <PackageReference Include="libwkhtmltox-64" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EXConverter.Application\EXConverter.Application.csproj" />
+  </ItemGroup>
+
+</Project>
