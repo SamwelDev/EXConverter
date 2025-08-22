@@ -11,6 +11,7 @@
     <PackageReference Include="DinkToPdf" Version="1.0.7" />
     <PackageReference Include="EPPlus" Version="8.1.0" />
     <PackageReference Include="libwkhtmltox-64" Version="1.0.0" />
+    <PackageReference Include="PDFsharp" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

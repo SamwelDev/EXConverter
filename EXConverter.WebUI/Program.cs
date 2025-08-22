@@ -11,6 +11,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 builder.Services.AddScoped<IConService, ConvertorRepo>();
+builder.Services.AddScoped<IComboDocService, ComboDocRepos>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

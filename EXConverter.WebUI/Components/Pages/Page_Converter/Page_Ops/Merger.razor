@@ -1,0 +1,140 @@
+﻿@inject IComboDocService _service
+@inject IJSRuntime _Js
+@inject ILogger<Merger> _logger
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class=" rounded">
+                <div class="card-body text-center">
+                    <h5 class="text-info  mb-3">Pakia faili yako ya Hati</h5>
+
+                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
+                        <InputFile OnChange="HandleFiles" multiple />
+                        <button class="btn btn-dark text-white rounded-5 ms-1" @onclick="Merge" title="Merge doc"/>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center mt-5">
+            <div class="col-md-4 mb-4">
+                <i class="bi-incognito fs-3 text-primary mb-2"></i>
+                <h6 class="text-black">Jinsi Inavyofanya Kazi</h6>
+                <p class="swahili-lab">
+                    Pakia faili lako la Excel (.xls/.xlsx), mfumo utalibadilisha kuwa PDF moja kwa moja. Faili linachakatwa haraka na salama.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi-shield-check fs-3 text-success mb-2"></i>
+                <h6 class="text-black">Usalama na Faragha</h6>
+                <p class="swahili-lab">
+                    Faili zako zinalindwa kwa usimbaji fiche. sihifadhi data/taarifa zako baada ya mchakato kukamilika.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi-display-fill  fs-3 text-info mb-2"></i>
+                <h6 class="text-black">Inafanya Kazi Kwenye Vifaa Vyote</h6>
+                <p class="swahili-lab">
+                    Tumia huduma hii kwenye Windows, Mac, Linux, Android au iOS. Hakuna programu ya ziada inayohitajika.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi-star fs-3 text-warning mb-2"></i>
+                <h6 class="text-black">Matokeo ya Ubora wa Juu</h6>
+                <p class="swahili-lab">
+                    Faili zako zinabadilishwa kwa ubora wa juu kwa kutumia teknolojia ya kisasa ya PDF. Inasaidia fomati nyingi za Excel.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi-lightning-fill fs-3 text-danger "></i>
+                <h6 class="text-black">Haraka na Rahisi</h6>
+                <p class="swahili-lab">
+                    Badilisha faili lako kwa hatua chache tu. Hakuna usajili, hakuna usumbufu pakia, subiri, pakua ni rahisi tu.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi-globe-europe-africa-fill fs-3 text-primary mb-2"></i>
+                <h6 class="text-black">Upatikanaji Popote</h6>
+                <p class="swahili-lab">
+                    Tumia huduma hii kutoka mahali popote duniani. Faili zako zinapatikana kwa urahisi kupitia kifaa chako.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+@code {
+   private List<byte[]> fileBytes = new();
+
+    private async Task HandleFiles(InputFileChangeEventArgs e)
+    {
+        fileBytes.Clear();
+
+        try
+        {
+            foreach (var file in e.GetMultipleFiles())
+            {
+                using var stream = file.OpenReadStream(); 
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms); 
+                var fileData = ms.ToArray();
+
+                if (fileData.Length == 0)
+                {
+                    _logger.LogWarning($"File {file.Name} is empty and was skipped.");
+                    continue;
+                }
+
+                fileBytes.Add(fileData);
+                _logger.LogInformation($"File {file.Name} uploaded with {fileData.Length} bytes.");
+            }
+
+            if (fileBytes.Count == 0)
+            {
+                _logger.LogWarning("No valid files were uploaded.");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while handling file upload.");
+        }
+    }
+
+    private async Task Merge()
+    {
+        if (fileBytes == null || fileBytes.Count == 0)
+        {
+            _logger.LogWarning("No files selected for merging.");
+            return;
+        }
+
+        try
+        {
+            var merged = _service.MergeDocuments(fileBytes);
+            await DownloadFile("merged.pdf", merged);
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error during merge.");
+        }
+    }
+
+
+   private async Task DownloadFile(string filename, byte[] data)
+    {
+        var base64 = Convert.ToBase64String(data);
+        await _Js.InvokeVoidAsync("downloadFile", filename, base64);
+    }
+   
+}

@@ -1,0 +1,81 @@
+﻿@page "/"
+@using EXConverter.WebUI.Components.Pages.Page_Converter.Page_Ops
+@inject ILogger<TabsWrapper> _logger
+
+<PageTitle>CONV|sasisha</PageTitle>
+<div class="container py-4">
+    <div>
+
+        <nav class="underline-tabs mb-3">
+            <div class="d-flex flex-wrap gap-3" role="tablist">
+                <button class="tab-btn btn  text-start px-0 @(_activeTab == "_Home" ? "active" : "")"
+                        @onclick="@(() => SelectTabs("_Home"))"
+                        aria-selected="@(_activeTab == "_Home")"
+                        aria-controls="tab-convert"
+                        role="tab">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    <span>Convert <small class="text-muted">(Badili)</small></span>
+                </button>
+
+                <button class="tab-btn btn  text-start px-0 @(_activeTab == "_splitter" ? "active" : "")"
+                        @onclick="@(() => SelectTabs("_splitter"))"
+                        aria-selected="@(_activeTab == "_splitter")"
+                        aria-controls="tab-split"
+                        role="tab">
+                    <i class="bi bi-arrow-left-right   "></i>
+                    <span>Split <small class="text-muted">(Gawanya)</small></span>
+                </button>
+
+                <button class="tab-btn btn btn-link text-start px-0 @(_activeTab == "_merger" ? "active" : "")"
+                        @onclick="@(() => SelectTabs("_merger"))"
+                        aria-selected="@(_activeTab == "_merger")"
+                        aria-controls="tab-merge"
+                        role="tab">
+                    <i class="bi bi-layout-wtf me-1"></i>
+                    <span>Merge <small class="text-muted">(Unganisha)</small></span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="tab-content w-100 mt-3">
+            @if (_IsLoading)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading...</p>
+                </div>
+            }
+            else
+            {
+                @if (_activeTab == "_Home")
+                {
+                    <div id="tab-convert" class="tab-pane show active fade-in" role="tabpanel">
+                        <Convertor />
+                    </div>
+                }
+                else if (_activeTab == "_splitter")
+                {
+                    <div id="tab-split" class="tab-pane show active fade-in" role="tabpanel">
+                        <Spliter />
+                    </div>
+                }
+                else if (_activeTab == "_merger")
+                {
+                    <div id="tab-merge" class="tab-pane show active fade-in" role="tabpanel">
+                        <Merger />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _activeTab = "_Home";
+    private bool _IsLoading = false;
+    private void SelectTabs(string _tab)
+    {
+        _activeTab = _tab;
+        _logger.LogInformation($"tabs changes to :", _tab);
+    }
+}

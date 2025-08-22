@@ -1,0 +1,161 @@
+﻿@inject IComboDocService _service
+@inject IJSRuntime _Js
+@inject ILogger<Spliter> _logger
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class=" rounded">
+                <div class="card-body text-center">
+                    <h5 class="text-warning  mb-3">Pakia faili yako ya Hati</h5>
+
+                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
+                        <InputFile OnChange="HandleFileSelected" accept=".pdf" />
+
+                        <InputNumber @bind-Value="PageToSplit"  min="1" />
+
+                        <button class="btn btn-dark text-white rounded-5 ms-1" @onclick="Split" disabled="@(fileBytes == null)" title="Split doc" />
+                           
+                        
+                      
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center mt-5">
+        <div class="col-md-4 mb-4">
+            <i class="bi-incognito fs-3 text-primary mb-2"></i>
+            <h6 class="text-black">Jinsi Inavyofanya Kazi</h6>
+            <p class="swahili-lab">
+                Pakia faili lako la Excel (.xls/.xlsx), mfumo utalibadilisha kuwa PDF moja kwa moja. Faili linachakatwa haraka na salama.
+            </p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <i class="bi-shield-check fs-3 text-success mb-2"></i>
+            <h6 class="text-black">Usalama na Faragha</h6>
+            <p class="swahili-lab">
+                Faili zako zinalindwa kwa usimbaji fiche. sihifadhi data/taarifa zako baada ya mchakato kukamilika.
+            </p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <i class="bi-display-fill  fs-3 text-info mb-2"></i>
+            <h6 class="text-black">Inafanya Kazi Kwenye Vifaa Vyote</h6>
+            <p class="swahili-lab">
+                Tumia huduma hii kwenye Windows, Mac, Linux, Android au iOS. Hakuna programu ya ziada inayohitajika.
+            </p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <i class="bi-star fs-3 text-warning mb-2"></i>
+            <h6 class="text-black">Matokeo ya Ubora wa Juu</h6>
+            <p class="swahili-lab">
+                Faili zako zinabadilishwa kwa ubora wa juu kwa kutumia teknolojia ya kisasa ya PDF. Inasaidia fomati nyingi za Excel.
+            </p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <i class="bi-lightning-fill fs-3 text-danger "></i>
+            <h6 class="text-black">Haraka na Rahisi</h6>
+            <p class="swahili-lab">
+                Badilisha faili lako kwa hatua chache tu. Hakuna usajili, hakuna usumbufu pakia, subiri, pakua ni rahisi tu.
+            </p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <i class="bi-globe-europe-africa-fill fs-3 text-primary mb-2"></i>
+            <h6 class="text-black">Upatikanaji Popote</h6>
+            <p class="swahili-lab">
+                Tumia huduma hii kutoka mahali popote duniani. Faili zako zinapatikana kwa urahisi kupitia kifaa chako.
+            </p>
+        </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+
+
+@code {
+    private byte[]? fileBytes;
+    private  int PageToSplit = 0;
+
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file == null)
+        {
+            _logger.LogWarning("No file was selected.");
+            return;
+        }
+
+        if (!file.ContentType.Contains("pdf"))
+        {
+            _logger.LogError("Only PDF files are supported. Uploaded type: {ContentType}", file.ContentType);
+            return;
+        }
+
+        try
+        {
+            using var stream = new MemoryStream();
+            await file.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024).CopyToAsync(stream); // 50 MB
+            fileBytes = stream.ToArray();
+
+            _logger.LogInformation("File uploaded: {Name}, size: {Size} bytes", file.Name, fileBytes.Length);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to read uploaded file.");
+        }
+    }
+
+    private async Task Split()
+    {
+        if (fileBytes == null || fileBytes.Length == 0)
+        {
+            _logger.LogError("Cannot split: fileBytes is null or empty.");
+            return;
+        }
+
+        if (PageToSplit < 1)
+        {
+            _logger.LogError("Invalid page number: {PageToSplit}", PageToSplit);
+            return;
+        }
+
+        try
+        {
+            _logger.LogInformation("Starting split at page {PageToSplit}", PageToSplit);
+
+            var parts = _service.SplitDocument(fileBytes, new List<int> { PageToSplit });
+
+            if (parts == null || parts.Count == 0)
+            {
+                _logger.LogWarning("No parts returned from split.");
+                return;
+            }
+
+            for (int i = 0; i < parts.Count; i++)
+            {
+                _logger.LogInformation("Downloading part {Part} with {Size} bytes", i + 1, parts[i].Length);
+                await DownloadFile($"split_page_{i + 1}.pdf", parts[i]);
+            }
+
+            _logger.LogInformation("Split completed successfully.");
+        }
+        catch (Exception excp)
+        {
+            _logger.LogWarning(excp, "Failed to split documents");
+        }
+    }
+
+    private async Task DownloadFile(string filename, byte[] data)
+    {
+        var base64 = Convert.ToBase64String(data);
+        await _Js.InvokeVoidAsync("downloadFile", filename, base64);
+    }
+
+  
+}

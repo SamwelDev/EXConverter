@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/Individual"
 @inject IJSRuntime JS
 @inject IConService _service
 @inject ILogger<Convertor> _logger
@@ -12,12 +12,7 @@
             <div class=" rounded">
                 <div class="card-body text-center">
                     <h5 class="text-primary  mb-3">Pakia faili yako ya Excel</h5>
-                    @* <p class="text-muted mb-4">
-                        <small class="swahili-lab">
-                            Chagua faili la Excel (.xlsx au .xls) ili kubadilisha kuwa hati ya PDF. Unaweza kuvuta na kuachia faili yako hapa au kuchagua faili kwenye kifaa chako
-                        </small>
-                    </p> *@
-
+                   
                     <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
                         <InputFile OnChange="HandleFile" id="fileInput" />
 
