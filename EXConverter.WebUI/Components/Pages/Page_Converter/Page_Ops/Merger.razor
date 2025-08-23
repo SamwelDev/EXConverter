@@ -1,7 +1,7 @@
-﻿@inject IComboDocService _service
+﻿@page "/merger"
+@inject IComboDocService _service
 @inject IJSRuntime _Js
 @inject ILogger<Merger> _logger
-
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -10,7 +10,7 @@
                 <div class="card-body text-center">
                     <h5 class="text-info  mb-3">Pakia faili yako ya Hati</h5>
 
-                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
+                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3" style="background-color:burlywood">
                         <InputFile OnChange="HandleFiles" multiple />
                         <button class="btn btn-dark text-white rounded-5 ms-1" @onclick="Merge" title="Merge doc"/>
 

@@ -1,4 +1,5 @@
-﻿@inject IComboDocService _service
+﻿@page "/spliter"
+@inject IComboDocService _service
 @inject IJSRuntime _Js
 @inject ILogger<Spliter> _logger
 
@@ -10,7 +11,7 @@
                 <div class="card-body text-center">
                     <h5 class="text-warning  mb-3">Pakia faili yako ya Hati</h5>
 
-                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
+                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3" style="background-color:darkgoldenrod">
                         <InputFile OnChange="HandleFileSelected" accept=".pdf" />
 
                         <InputNumber @bind-Value="PageToSplit"  min="1" />
@@ -29,7 +30,7 @@
             <i class="bi-incognito fs-3 text-primary mb-2"></i>
             <h6 class="text-black">Jinsi Inavyofanya Kazi</h6>
             <p class="swahili-lab">
-                Pakia faili lako la Excel (.xls/.xlsx), mfumo utalibadilisha kuwa PDF moja kwa moja. Faili linachakatwa haraka na salama.
+                Pakia faili lako la Excel (.xls/.xlsx), mfumo kugawanywa moja kwa moja. Faili linachakatwa haraka na salama.
             </p>
         </div>
         <div class="col-md-4 mb-4">

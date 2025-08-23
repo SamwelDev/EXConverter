@@ -9,5 +9,6 @@ namespace EXConverter.Application.Application_Serv
     public interface IConService
     {
         byte[] ConvertExcelToPdf(Stream excelStream);
+        string ConvertExcelToCsv(Stream excelStream, string delimiter = ",");
     }
 }

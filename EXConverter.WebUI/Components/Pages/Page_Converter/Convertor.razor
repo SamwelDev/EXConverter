@@ -1,4 +1,5 @@
-﻿@page "/Individual"
+﻿@page "/converter"
+@using System.Text
 @inject IJSRuntime JS
 @inject IConService _service
 @inject ILogger<Convertor> _logger
@@ -13,8 +14,16 @@
                 <div class="card-body text-center">
                     <h5 class="text-primary  mb-3">Pakia faili yako ya Excel</h5>
                    
-                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3">
-                        <InputFile OnChange="HandleFile" id="fileInput" />
+                    <div class="drop-zone border-2 border-dashed rounded p-4 mb-3" style="background-color:aqua;">
+                        <div class="d-flex justify-content-between">
+                            <select class="me-2" @bind="_selectedFormat">
+                                <option value="pdf">PDF</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                            <InputFile OnChange="HandleFile" id="fileInput"  />
+
+                        </div>
+                                              
 
                         <i class="fas fa-file-excel fa-4x text-success mb-3"></i>
                         <p class="mb-2">
@@ -57,7 +66,7 @@
             <i class="bi-incognito fs-3 text-primary mb-2"></i>
             <h6 class="text-black">Jinsi Inavyofanya Kazi</h6>
             <p class="swahili-lab">
-                Pakia faili lako la Excel (.xls/.xlsx), mfumo utalibadilisha kuwa PDF moja kwa moja. Faili linachakatwa haraka na salama.
+                Pakia faili lako la Excel (.xls/.xlsx), mfumo utalibadilisha kuwa PDF moja kwa moja na CSV pia. Faili linachakatwa haraka na salama.
             </p>
         </div>
         <div class="col-md-4 mb-4">
@@ -100,6 +109,7 @@
 
 @code {
     private byte[] _pdfBytes;
+    private string _selectedFormat = "pdf";
     private string _pdfUrl = string.Empty;
     private string _fileName = string.Empty;
     private ElementReference fileInput;
@@ -116,11 +126,44 @@
     {
         var file = e.File;
         _fileName = file.Name;
-        await ConvertFile(file);
-        _logger.LogInformation("Try to handle file so as can convert");
-    }
+        IsLoading = true;
+        _pdfBytes = null;
+        _pdfUrl = string.Empty;
+        StateHasChanged();
 
-    [JSInvokable]
+        try
+        {
+            using var ms = new MemoryStream();
+            await file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(ms);
+            ms.Position = 0;
+
+            if (_selectedFormat == "pdf")
+            {
+                _pdfBytes = _service.ConvertExcelToPdf(ms);
+                if (_pdfBytes != null && _pdfBytes.Length > 0)
+                {
+                    _pdfUrl = $"data:application/pdf;base64,{Convert.ToBase64String(_pdfBytes)}";
+                }
+            }
+            else if (_selectedFormat == "csv")
+            {
+                var csvString = _service.ConvertExcelToCsv(ms);
+                var csvBytes = Encoding.UTF8.GetBytes(csvString);
+                var base64Csv = Convert.ToBase64String(csvBytes);
+
+                await JS.InvokeVoidAsync("downloadFile", "doc.csv", "text/csv", base64Csv);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Conversion failed: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
     public async Task OnDropFile(string base64File, string fileName)
     {
         IsLoading = true;
@@ -170,6 +213,7 @@
             {
                 _logger.LogWarning(" PDF generation returned empty result");
             }
+
         }
         catch (Exception ex)
         {
